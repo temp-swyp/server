@@ -27,7 +27,10 @@ jobs:
 
       # ✅ Docker 로그인
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" > /tmp/docker-password.txt
+          docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin < /tmp/docker-password.txt
+          rm /tmp/docker-password.txt
 
       # ✅ Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image
@@ -37,13 +40,15 @@ jobs:
 
       # ✅ SSH로 배포 서버 접속 후 Docker 컨테이너 실행
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker stop spring-boot-app || true
-            docker rm spring-boot-app || true
+            if docker ps -q --filter "name=spring-boot-app" | grep -q .; then
+              docker stop spring-boot-app
+              docker rm spring-boot-app
+            fi
             docker pull ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
-            docker run -d --name spring-boot-app -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            docker run -d --name spring-boot-app -p 8080:8080 -e SPRING_PROFILES_ACTIVE=production ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
