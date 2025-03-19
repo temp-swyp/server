@@ -32,18 +32,19 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String token = jwtUtil.createJwt(customOauth2User, 60 * 60 * 60L);
 
         // 쿠키 생성 및 redirect 고쳐야할 부분
-        response.addCookie(createCookie("Authorization", token));
+//        response.addCookie(createCookie("Authorization", token));
+        response.setHeader("Authorization", "Bearer " + token);
         response.sendRedirect("http://localhost:3000/");
     }
 
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true); //JavaScript에서 쿠키에 접근하는 것을 방지하여 XSS 공격을 막는 데 도움을 줍니다.
-
-        return cookie;
-    }
+//    private Cookie createCookie(String key, String value) {
+//
+//        Cookie cookie = new Cookie(key, value);
+//        cookie.setMaxAge(60*60*60);
+//        //cookie.setSecure(true);
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(true); //JavaScript에서 쿠키에 접근하는 것을 방지하여 XSS 공격을 막는 데 도움을 줍니다.
+//
+//        return cookie;
+//    }
 }

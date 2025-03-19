@@ -1,4 +1,7 @@
 spring:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+
   security:
     oauth2:
 #      resourceserver:
@@ -32,6 +35,5 @@ spring:
               - account_email
               - profile_nickname
               - profile_image
-  jwt:
-    secret: ${ JWT_SECRET_KEY }
+
 
