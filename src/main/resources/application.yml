@@ -1,0 +1,25 @@
+# ?? ??
+spring:
+  profiles:
+    active: local
+    group:
+      local: local
+      deploy: deploy
+---
+spring:
+  config:
+    import:
+      - application-security.yml
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: application-h2database.yml
+---
+spring:
+  config:
+    activate:
+      on-profile: deploy
+    import: application-database.yml
+

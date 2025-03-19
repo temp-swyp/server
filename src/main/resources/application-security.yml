@@ -1,0 +1,37 @@
+spring:
+  security:
+    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri:
+
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize # 사용자를 카카오 로그인 페이지로 리다이렉트하는 Authorization Endpoint URI
+            token-uri: https://kauth.kakao.com/oauth/token # Authorization Code를 사용하여 Access Token을 요청하는 Token Endpoint URI
+            user-info-uri: https://kapi.kakao.com/v2/user/me # Access Token을 사용하여 사용자 정보를 요청하는 User Info Endpoint URI
+            user-name-attribute: id
+
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH2_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH2_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_OAUTH2_REDIRECT_URI}
+            scope:
+              - email
+              - profile
+          kakao:
+            client-name: kakao
+            client-id: ${KAKAO_OAUTH2_CLIENT_ID}
+            client-secret: ${KAKAO_OAUTH2_CLIENT_SECERET}
+            redirect-uri: ${KAKAO_OAUTH2_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - account_email
+              - profile_nickname
+              - profile_image
+  jwt:
+    secret: ${ JWT_SECRET_KEY }
+

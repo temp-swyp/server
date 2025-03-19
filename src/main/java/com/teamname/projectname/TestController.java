@@ -12,4 +12,11 @@ public class TestController {
     public String test() {
         return "hello";
     }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test2() {
+        return "test";
+    }
+
 }
