@@ -6,7 +6,7 @@ spring:
     oauth2:
 #      resourceserver:
 #        jwt:
-#          jwk-set-uri:
+#          secret-key: ${JWT_SECRET_KEY}
 
       client:
         provider:

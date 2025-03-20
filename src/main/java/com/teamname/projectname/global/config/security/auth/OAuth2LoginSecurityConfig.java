@@ -1,5 +1,7 @@
 package com.teamname.projectname.global.config.security.auth;
 
+import com.teamname.projectname.global.config.security.auth.util.JwtUtil;
+import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
@@ -16,17 +20,20 @@ import org.springframework.security.web.SecurityFilterChain;
 public class OAuth2LoginSecurityConfig {
     private final CustomOauth2UserService customOauth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final JwtUtil jwtUtil;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/favicon.ico", "/css/**", "/images/**", "/js/**","/h2-console/**").permitAll() // 정적 리소스 및 루트 페이지 허용
-                .anyRequest().authenticated()  // All other requests require authentication
+                .anyRequest().authenticated()// All other requests require authentication
             );
 
-        //로그인 요청 정보 확인하는 코드작성
-        
+        //spring-boot-starter-oauth2-resource-server 라이브러리 사용
+        http.
+            oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtUtil.jwtDecoder())));
 
         //운영시 삭제
         http
@@ -47,6 +54,7 @@ public class OAuth2LoginSecurityConfig {
                 .successHandler(customSuccessHandler)
             );
 
+
         //세션 설정 : STATELESS
         http
             .sessionManagement((session) -> session
@@ -54,4 +62,6 @@ public class OAuth2LoginSecurityConfig {
 
         return http.build();
     }
+
+
 }

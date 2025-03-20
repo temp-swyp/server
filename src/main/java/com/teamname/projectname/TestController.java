@@ -13,10 +13,10 @@ public class TestController {
         return "hello";
     }
 
-    @GetMapping("/test")
+    @GetMapping("/loginTest")
     @ResponseBody
     public String test2() {
-        return "test";
+        return "로그인 성공 야호!";
     }
 
 }
