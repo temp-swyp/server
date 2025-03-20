@@ -112,7 +112,7 @@ jobs:
           # docker run -d(백그라운드) -p(포트연결) 8080(호스트서버포트):8080(컨테이너포트)
           # 사용하지 않는 도커 이미지 삭제
           script: |
-            sudo docker pull ${{ secrets.DOCKER_NAMESPACE }}/fitisland:latest
+            sudo docker pull ${{ secrets.DOCKER_NAMESPACE }}/fitisland:latest || exit 1
             sudo docker stop $(docker ps -aq --filter "name=fitisland-app") || true
             sudo docker rm $(docker ps -aq --filter "name=fitisland-app") || true
             sudo docker run -d -p 8080:8080 --name fitisland-app ${{ secrets.DOCKER_NAMESPACE }}/fitisland:latest
