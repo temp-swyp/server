@@ -29,7 +29,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // DefaultOAuth2User로 변경
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
 
-        String token = jwtUtil.createJwt(customOauth2User, 60 * 60 * 60L);
+        String token = jwtUtil.createJwt(customOauth2User, 60000 );
 
         // 쿠키 생성 및 redirect 고쳐야할 부분
 //        response.addCookie(createCookie("Authorization", token));
